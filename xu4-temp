@@ -18,10 +18,10 @@ end
 
 -- ANSI sequences
 term = {
-	red = function() return "\027[31m" end,
-	yellow = function() return "\027[33m" end,
-	green = function() return "\027[32m" end,
-	reset = function() return "\027[0m" end,
+	red = "\027[31m",
+	yellow = "\027[33m",
+	green = "\027[32m",
+	reset = "\027[0m",
 }
 
 function readTemp(file)
@@ -35,13 +35,13 @@ end
 function colorTemp(temp)
 	local o = ""
 	if (isatty) then
-		if (temp < "60") then o = term.green()
-		elseif (temp < "70") then o = term.yellow()
-		else o = term.red()
+		if (temp < "60") then o = term.green
+		elseif (temp < "70") then o = term.yellow
+		else o = term.red
 		end
 	end
 	o = o .. temp .. "°C  "
-	if (isatty) then o = o .. term.reset() end
+	if (isatty) then o = o .. term.reset end
 	return o
 end
 
