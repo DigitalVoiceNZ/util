@@ -1,0 +1,55 @@
+#! /usr/bin/env lua
+
+-- read XU4 temperature
+--
+-- 20210124 jimt@onjapan.net
+
+temps = "/sys/class/thermal/thermal_zone%d/temp"
+
+-- are we on a tty?
+ok, exit, signal = os.execute( "test -t 1" )
+isatty = (ok and exit == "exit") and signal == 0 or false
+
+if (arg[1] == "--version" or arg[1] == "-v" ) then
+  print("xu4-temp -- display temperature of Odroid XU4")
+  print("Copyright © 2021 Jim Tittsler <jimt@onjapan.net>")
+  os.exit(0)
+end
+
+-- ANSI sequences
+term = {
+	red = function() return "\027[31m" end,
+	yellow = function() return "\027[33m" end,
+	green = function() return "\027[32m" end,
+	reset = function() return "\027[0m" end,
+}
+
+function readTemp(file)
+	local f = assert(io.open(file, "r"))
+	local content = f:read("*all")
+	f:close()
+	content = string.gsub(content, "000\n", "")
+	return content
+end
+
+function colorTemp(temp)
+	local o = ""
+	if (isatty) then
+		if (temp < "60") then o = term.green()
+		elseif (temp < "70") then o = term.yellow()
+		else o = term.red()
+		end
+	end
+	o = o .. temp .. "°C  "
+	if (isatty) then o = o .. term.reset() end
+	return o
+end
+
+output = ""
+for zone=0,3 do
+	local tf = string.format(temps, zone)
+	output = output .. colorTemp(readTemp(tf))
+end
+
+print("\nCPU Temps:", output, "\n")
+
