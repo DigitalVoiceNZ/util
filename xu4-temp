@@ -51,5 +51,5 @@ for zone=0,3 do
 	output = output .. colorTemp(readTemp(tf))
 end
 
-print("\nCPU Temps:", output, "\n")
+print("CPU Temps:", output)
 
