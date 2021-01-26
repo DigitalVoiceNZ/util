@@ -8,12 +8,14 @@ temps = "/sys/class/thermal/thermal_zone%d/temp"
 
 -- are we on a tty?
 ok, exit, signal = os.execute( "test -t 1" )
-isatty = (ok and exit == "exit") and signal == 0 or false
+colorize = (ok and exit == "exit") and signal == 0 or false
 
 if (arg[1] == "--version" or arg[1] == "-v" ) then
   print("xu4-temp -- display temperature of Odroid XU4")
   print("Copyright © 2021 Jim Tittsler <jimt@onjapan.net>")
   os.exit(0)
+elseif (arg[1] == "--color" or arg[1] == "-c") then
+	colorize = true
 end
 
 -- ANSI sequences
@@ -34,14 +36,14 @@ end
 
 function colorTemp(temp)
 	local o = ""
-	if (isatty) then
+	if (colorize) then
 		if (temp < "60") then o = term.green
 		elseif (temp < "70") then o = term.yellow
 		else o = term.red
 		end
 	end
 	o = o .. temp .. "°C  "
-	if (isatty) then o = o .. term.reset end
+	if (colorize) then o = o .. term.reset end
 	return o
 end
 
