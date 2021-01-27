@@ -1,0 +1,8 @@
+#! /bin/sh
+
+# display xlxd and ambed journalctl logs
+#
+# 20210127 jimt@onjapan.net
+
+multitail -l "journalctl -u ambed -f" -l "journalctl -u xlxd -f"
+
