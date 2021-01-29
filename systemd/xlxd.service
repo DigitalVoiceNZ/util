@@ -1,0 +1,17 @@
+[Unit]
+Description=xlxd
+Requires=network.target
+After=systemd-user-session.service network.target
+
+[Service]
+Type=forking
+WorkingDirectory=/xlxd
+ExecStart=/xlxd/startup.sh
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
